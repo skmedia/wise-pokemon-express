@@ -1,0 +1,12 @@
+version: '3.7'
+services:
+  database:
+    image: 'mariadb:10.6.4'
+    volumes:
+      - ${PWD}/docker-volumes/mariadb:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: wise-pokemon-express
+      MYSQL_DATABASE: wise-pokemon-express
+      TZ: Europe\Brussels
+    ports:
+      - '3399:3306'

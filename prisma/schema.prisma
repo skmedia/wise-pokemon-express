@@ -1,0 +1,40 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id    Int     @id @default(autoincrement())
+    email String  @unique
+    name  String?
+}
+
+model Pokemon {
+    id        Int               @id @default(autoincrement())
+    name      String            @unique
+    types     Json?
+    teams     PokemonsOnTeams[]
+    createdAt DateTime          @default(now())
+    updatedAt DateTime          @updatedAt
+}
+
+model Team {
+    id        Int               @id @default(autoincrement())
+    name      String            @unique
+    pokemons  PokemonsOnTeams[]
+    createdAt DateTime          @default(now())
+    updatedAt DateTime          @updatedAt
+}
+
+model PokemonsOnTeams {
+    team      Team    @relation(fields: [teamId], references: [id])
+    teamId    Int // relation scalar field (used in the `@relation` attribute above)
+    pokemon   Pokemon @relation(fields: [pokemonId], references: [id])
+    pokemonId Int // relation scalar field (used in the `@relation` attribute above)
+
+    @@id([teamId, pokemonId])
+}
