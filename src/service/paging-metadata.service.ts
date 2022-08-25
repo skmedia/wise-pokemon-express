@@ -18,8 +18,8 @@ const createPagingMetadata = (
   prevUrl.searchParams.set("offset", String(previousOffset));
 
   return {
-    next: nextUrl,
-    previous: prevUrl,
+    next: String(nextUrl),
+    previous: String(prevUrl),
     total: total,
     pages: pages,
     page: page,

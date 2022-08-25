@@ -1,11 +1,11 @@
 ## WisePokemon - express
 
 ### Todo
+* check express-openapi-validator / swagger-routes-express!
 * fix the anies
-* add tests
+* add more tests (db tests)
 * add extra pokemon fields
 * controller error handling
-* eslint config
 
 ### Docs
 
@@ -23,7 +23,7 @@ mkcert -install
 mkcert localhost
 ```
 
-check key names in index.ts
+check key definition in index.ts
 
 ### Start db
 ```
@@ -43,4 +43,10 @@ https://localhost:8022
 ```
 npm run load-pokemons-from-file
 npm run load-pokemon-from-api pikachu
+```
+
+### Lint & test
+```
+npm run test
+npm run lint
 ```

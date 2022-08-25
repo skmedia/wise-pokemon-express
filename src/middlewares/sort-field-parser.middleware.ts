@@ -1,6 +1,6 @@
 import express from "express";
 
-const sort = (
+const parseSortField = (
   req: express.Request,
   res: express.Response,
   next: express.NextFunction
@@ -13,4 +13,4 @@ const sort = (
   return next();
 };
 
-export default sort;
+export default parseSortField;
