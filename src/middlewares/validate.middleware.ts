@@ -1,8 +1,6 @@
 import express from "express";
 import { validationResult, ValidationChain } from "express-validator";
 
-// sequential processing, stops running validations chain if
-// the previous one have failed.
 const validate = (validations: ValidationChain[]) => {
   return async (
     req: express.Request,

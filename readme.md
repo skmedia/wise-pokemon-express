@@ -10,7 +10,7 @@
 ### Docs
 
 postman collection
-see docs/WisePokemon Express.postman_collection.json
+see `docs/WisePokemon Express.postman_collection.json`
 
 ### Setup
 

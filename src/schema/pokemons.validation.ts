@@ -1,10 +1,6 @@
 import { Schema } from "express-validator";
 import { findPokemonById } from "./../service/pokemons.service";
 
-// The location of the field, can be one or more of body, cookies, headers,
-// params or query.
-// If omitted, all request locations will be checked
-
 const showPokemonDetailSchema: Schema = {
   id: {
     in: ["params"],
