@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import { PrismaClient } from "@prisma/client";
-import { createOrUpdatePokemon } from "./src/service/pokemons.service";
+import createOrUpdatePokemon from "./src/service/pokemons-import.service";
 
 const prisma = new PrismaClient();
 

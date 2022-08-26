@@ -13,7 +13,7 @@ const showPokemonDetailSchema: Schema = {
       options: async (value) => {
         const team = await findPokemonById(Number(value));
         if (!team) {
-          return Promise.reject("Pokemon does not exist");
+          return Promise.reject("pokemon not found");
         }
       },
     },

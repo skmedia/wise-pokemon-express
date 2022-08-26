@@ -5,6 +5,9 @@
       "@typescript-eslint",
       "unused-imports"
     ],
+    "ignorePatterns": [
+        "src/types/pokemon-from-api*"
+    ],
     "rules": {
 		"@typescript-eslint/no-explicit-any": "warn",
 		"@typescript-eslint/no-unused-vars": "off",

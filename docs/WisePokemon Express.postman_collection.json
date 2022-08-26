@@ -25,7 +25,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/api/v1/teams?sort=name-asc",
+							"raw": "{{host}}/api/v1/teams?sort=name-desc",
 							"host": [
 								"{{host}}"
 							],
@@ -37,7 +37,7 @@
 							"query": [
 								{
 									"key": "sort",
-									"value": "name-asc"
+									"value": "name-desc"
 								}
 							]
 						}
@@ -91,7 +91,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"This is my team\"\n}",
+							"raw": "{\n    \"name\": \"Team 1\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -220,7 +220,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/api/v1/search?query=bug&limit=1",
+							"raw": "{{host}}/api/v1/search?query=water&limit=100",
 							"host": [
 								"{{host}}"
 							],
@@ -232,11 +232,11 @@
 							"query": [
 								{
 									"key": "query",
-									"value": "bug"
+									"value": "water"
 								},
 								{
 									"key": "limit",
-									"value": "1"
+									"value": "100"
 								}
 							]
 						}
@@ -249,7 +249,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/api/v1/pokemons/1900",
+							"raw": "{{host}}/api/v1/pokemons/1",
 							"host": [
 								"{{host}}"
 							],
@@ -257,7 +257,7 @@
 								"api",
 								"v1",
 								"pokemons",
-								"1900"
+								"1"
 							]
 						}
 					},

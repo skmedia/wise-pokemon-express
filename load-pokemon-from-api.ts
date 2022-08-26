@@ -2,7 +2,7 @@ import * as fs from "fs";
 import * as request from "request";
 import { Pokemon, PrismaClient } from "@prisma/client";
 import { exit } from "process";
-import { createOrUpdatePokemon } from "./src/service/pokemons.service";
+import createOrUpdatePokemon from "./src/service/pokemons-import.service";
 
 const prisma = new PrismaClient();
 const args = process.argv.slice(2);
@@ -23,7 +23,12 @@ function fetchPokemonFromApi(nameOrId: string | number) {
     },
     async function (error, response, body) {
       if (!response || response.statusCode !== 200) {
-        process.stdout.write("pokemon not fround: " + nameOrId);
+        process.stdout.write(
+          "could not fetch data from api for " +
+            nameOrId +
+            " / code: " +
+            response.statusCode
+        );
         process.exit(0);
       }
       const pokemon = await createOrUpdatePokemon(body);

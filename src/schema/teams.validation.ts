@@ -29,7 +29,7 @@ const showTeamDetailSchema: Schema = {
       options: async (value) => {
         const team = await findTeamById(Number(value));
         if (!team) {
-          return Promise.reject("Team does not exist");
+          return Promise.reject("team not found");
         }
       },
     },
@@ -50,7 +50,7 @@ const assignPokemonsSchema: Schema = {
       options: async (value) => {
         const team = await findTeamById(Number(value));
         if (!team) {
-          return Promise.reject("Team does not exist");
+          return Promise.reject("team not found");
         }
       },
     },

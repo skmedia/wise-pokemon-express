@@ -22,7 +22,7 @@ async function list(req: Request, res: Response, next: NextFunction) {
 async function listv2(req: Request, res: Response, next: NextFunction) {
   try {
     const { sortInfo, offset, limit } = req.query;
-    const { count, pokemons } = await pokemonsService.findAllv2(
+    const { count, data } = await pokemonsService.findAllv2(
       sortInfo as {
         field: Prisma.PokemonScalarFieldEnum;
         dir: Prisma.SortOrder;
@@ -32,7 +32,7 @@ async function listv2(req: Request, res: Response, next: NextFunction) {
     );
 
     res.json({
-      data: pokemons,
+      data: data,
       metadata: createPagingMetadata(req, count, Number(offset), Number(limit)),
     });
   } catch (err) {
@@ -44,7 +44,7 @@ async function listv2(req: Request, res: Response, next: NextFunction) {
 async function detail(req: Request, res: Response, next: NextFunction) {
   try {
     const pokemon = await pokemonsService.findPokemonById(
-      parseInt(req.params.id)
+      Number(req.params.id)
     );
     res.json(pokemon);
   } catch (err) {

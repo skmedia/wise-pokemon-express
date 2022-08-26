@@ -1,74 +1,101 @@
-import { PrismaClient, Prisma } from "@prisma/client";
+import { PrismaClient, Prisma, Pokemon } from "@prisma/client";
 
-const prisma = new PrismaClient({
-  // log: ["query", "info", "warn", "error"],
-});
+const prisma = new PrismaClient();
 
-async function createOrUpdatePokemon(data: any) {
-  const types = data.types.map((t: { type: { name: string } }) => t.type.name);
-  const pokemon = await prisma.pokemon.upsert({
-    where: {
-      name: data.name,
+type PokemonWithoutDetails = Omit<
+  Pokemon,
+  "createdAt" | "updatedAt" | "details"
+>;
+
+type PokemonInListing = {
+  id: number;
+  name: string;
+  types: { type: { name: string }; slot: string };
+  sprites: { front_default: string };
+};
+
+const pokemonInListingMapper = (
+  pokemon: PokemonWithoutDetails
+): PokemonInListing => {
+  const frontSprite = (pokemon.sprites as { front_default: string })
+    .front_default;
+
+  return {
+    id: pokemon.id,
+    name: pokemon.name,
+    types: pokemon.types as { type: { name: string }; slot: string },
+    sprites: {
+      front_default: frontSprite,
     },
-    update: {
-      name: data.name,
-      types: types,
-    },
-    create: {
-      name: data.name,
-      types: types,
-    },
-  });
+  };
+};
 
-  return pokemon;
-}
-
-async function findPokemonById(id: number): Promise<any> {
+async function findPokemonById(id: number) {
   const pokemon = await prisma.pokemon.findUnique({
     where: {
       id: id,
     },
   });
 
-  return pokemon;
+  if (pokemon === null) {
+    return null;
+  }
+
+  return {
+    id: pokemon.id,
+    name: pokemon.name,
+    ...(pokemon.details as Object),
+  };
 }
 
 async function findAll(sort: {
   field: Prisma.PokemonScalarFieldEnum;
   dir: Prisma.SortOrder;
-}): Promise<any> {
+}): Promise<PokemonInListing[]> {
   const orderBy: Prisma.PokemonOrderByWithRelationInput = {};
   orderBy[sort.field] = sort.dir;
 
-  const pokemons = await prisma.pokemon.findMany({
+  const pokemons: PokemonWithoutDetails[] = await prisma.pokemon.findMany({
+    select: {
+      id: true,
+      name: true,
+      types: true,
+      sprites: true,
+    },
     orderBy: orderBy,
   });
 
-  return pokemons;
+  const data = pokemons.map(pokemonInListingMapper);
+
+  return data;
 }
 
 async function findAllv2(
   sort: { field: Prisma.PokemonScalarFieldEnum; dir: Prisma.SortOrder },
   offset: number,
   limit: number
-): Promise<any> {
+): Promise<{ count: number; data: PokemonInListing[] }> {
   const orderBy: Prisma.PokemonOrderByWithRelationInput = {};
   orderBy[sort.field] = sort.dir;
 
-  const count = prisma.pokemon.count();
-  const pokemons = prisma.pokemon.findMany({
+  const count: Promise<number> = prisma.pokemon.count();
+  const pokemons: Promise<Pokemon[]> = prisma.pokemon.findMany({
     skip: offset,
     take: limit,
     orderBy: orderBy,
   });
 
-  return await Promise.all([count, pokemons]).then((values: Array<any>) => {
-    const [count, pokemons] = values;
-    return { count, pokemons };
+  return Promise.all([count, pokemons]).then((values: [number, Pokemon[]]) => {
+    const count: number = values[0];
+    const pokemons = values[1];
+
+    const data = pokemons.map(pokemonInListingMapper);
+
+    return { count, data };
   });
 }
 
-async function search(q: string, limit: number): Promise<any> {
+async function search(q: string, limit: number): Promise<PokemonInListing[]> {
   const pokemons = await prisma.pokemon.findMany({
     take: limit,
     where: {
@@ -80,7 +107,7 @@ async function search(q: string, limit: number): Promise<any> {
         },
         {
           types: {
-            path: "$",
+            path: "$[*].type.name",
             array_contains: q as string,
           },
         },
@@ -90,19 +117,11 @@ async function search(q: string, limit: number): Promise<any> {
       id: true,
       name: true,
       types: true,
-      teams: {
-        select: {
-          team: {
-            select: {
-              name: true,
-            },
-          },
-        },
-      },
+      sprites: true,
     },
   });
 
-  return pokemons;
+  return pokemons.map(pokemonInListingMapper);
 }
 
-export { findPokemonById, findAll, findAllv2, search, createOrUpdatePokemon };
+export { findPokemonById, findAll, findAllv2, search };

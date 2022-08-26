@@ -1,11 +1,11 @@
 ## WisePokemon - express
 
-### Todo
-* check express-openapi-validator / swagger-routes-express!
-* fix the anies
+### Todo / improvements
+* check express-openapi-validator / swagger-routes-express
 * add more tests (db tests)
-* add extra pokemon fields
+* save sprites
 * controller error handling
+* add caching
 
 ### Docs
 
@@ -19,8 +19,7 @@ Instal mkcert https://github.com/FiloSottile/mkcert
 
 ```bash
 cd keys
-mkcert -install
-mkcert localhost
+mkcert localhost 127.0.0.1 ::1
 ```
 
 check key definition in index.ts
