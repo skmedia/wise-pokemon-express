@@ -46,6 +46,9 @@ async function detail(req: Request, res: Response, next: NextFunction) {
     const pokemon = await pokemonsService.findPokemonById(
       Number(req.params.id)
     );
+    if (!pokemon) {
+      return res.status(404).json("not found");
+    }
     res.json(pokemon);
   } catch (err) {
     console.error(`Error`);

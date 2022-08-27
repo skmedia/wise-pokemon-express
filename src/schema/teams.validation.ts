@@ -1,9 +1,5 @@
 import { Schema } from "express-validator";
-import { findTeamById } from "./../service/teams.service";
-
-// The location of the field, can be one or more of body, cookies, headers,
-// params or query.
-// If omitted, all request locations will be checked
+import { findTeamById, findTeamByName } from "./../service/teams.service";
 
 const createTeamsSchema: Schema = {
   name: {
@@ -14,32 +10,40 @@ const createTeamsSchema: Schema = {
       options: { ignore_whitespace: true },
       bail: true,
     },
+    custom: {
+      options: async (value) => {
+        const team = await findTeamByName(String(value));
+        if (team) {
+          throw new Error("team exists");
+        }
+      },
+    },
   },
 };
 
 const showTeamDetailSchema: Schema = {
   id: {
+    isInt: {
+      errorMessage: "id must be a number",
+      bail: true,
+    },
+    toInt: true,
     in: ["params"],
     notEmpty: {
       errorMessage: "id is mandatory",
       options: { ignore_whitespace: true },
       bail: true,
     },
-    custom: {
-      options: async (value) => {
-        const team = await findTeamById(Number(value));
-        if (!team) {
-          return Promise.reject("team not found");
-        }
-      },
-    },
-    isInt: true,
-    toInt: true,
   },
 };
 
 const assignPokemonsSchema: Schema = {
   id: {
+    isInt: {
+      errorMessage: "id must be a number",
+      bail: true,
+    },
+    toInt: true,
     in: ["params"],
     notEmpty: {
       errorMessage: "id is mandatory",
@@ -48,14 +52,13 @@ const assignPokemonsSchema: Schema = {
     },
     custom: {
       options: async (value) => {
-        const team = await findTeamById(Number(value));
-        if (!team) {
-          return Promise.reject("team not found");
+        try {
+          await findTeamById(Number(value));
+        } catch (e) {
+          throw new Error("team not found");
         }
       },
     },
-    isInt: true,
-    toInt: true,
   },
   pokemons: {
     in: ["body"],
@@ -79,6 +82,9 @@ const assignPokemonsSchema: Schema = {
         const unique = Array.from(new Set(value));
         if (unique.length !== value.length) {
           throw new Error("pokemon list not unique");
+        }
+        if (unique.some((id: unknown) => typeof id !== "number")) {
+          throw new Error("all pokemon ids should be a number");
         }
       },
     },

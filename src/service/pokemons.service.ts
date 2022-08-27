@@ -1,6 +1,5 @@
-import { PrismaClient, Prisma, Pokemon } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { Prisma, Pokemon } from "@prisma/client";
+import prisma from "./../prisma.client";
 
 type PokemonWithoutDetails = Omit<
   Pokemon,

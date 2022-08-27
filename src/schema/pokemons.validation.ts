@@ -1,5 +1,4 @@
 import { Schema } from "express-validator";
-import { findPokemonById } from "./../service/pokemons.service";
 
 const showPokemonDetailSchema: Schema = {
   id: {
@@ -9,15 +8,10 @@ const showPokemonDetailSchema: Schema = {
       options: { ignore_whitespace: true },
       bail: true,
     },
-    custom: {
-      options: async (value) => {
-        const team = await findPokemonById(Number(value));
-        if (!team) {
-          return Promise.reject("pokemon not found");
-        }
-      },
+    isInt: {
+      errorMessage: "id must be a number",
+      bail: true,
     },
-    isInt: true,
     toInt: true,
   },
 };

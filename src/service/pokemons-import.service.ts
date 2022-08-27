@@ -1,7 +1,5 @@
-import { PrismaClient } from "@prisma/client";
 import { PokemonFromApi } from "../types/pokemon-from-api";
-
-const prisma = new PrismaClient();
+import prisma from "./../prisma.client";
 
 function createDetails(pokemon: PokemonFromApi) {
   const {

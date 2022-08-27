@@ -1,6 +1,6 @@
-import { PrismaClient, Team, PokemonsOnTeams } from "@prisma/client";
+import { Team, PokemonsOnTeams } from "@prisma/client";
 
-const prisma = new PrismaClient();
+import prisma from "./../prisma.client";
 
 type TeamWithPokemonsRelation = Team & {
   pokemons: PokemonsOnTeams[];
@@ -22,15 +22,12 @@ const teamWithPokemonsMapper = (
   };
 };
 
-async function createTeam(teamToAdd: { name: string }): Promise<Team> {
-  const team = await prisma.team.upsert({
-    where: {
-      name: teamToAdd.name,
-    },
-    update: {
-      name: teamToAdd.name,
-    },
-    create: {
+interface CreateTeamInput {
+  name: string;
+}
+async function createTeam(teamToAdd: CreateTeamInput): Promise<Team> {
+  const team = await prisma.team.create({
+    data: {
       name: teamToAdd.name,
     },
   });
@@ -38,7 +35,7 @@ async function createTeam(teamToAdd: { name: string }): Promise<Team> {
   return team;
 }
 
-async function findTeamById(id: number): Promise<TeamWithPokemonIds | null> {
+async function findTeamById(id: number): Promise<TeamWithPokemonIds> {
   const team = await prisma.team.findUniqueOrThrow({
     where: {
       id: id,
@@ -48,11 +45,22 @@ async function findTeamById(id: number): Promise<TeamWithPokemonIds | null> {
     },
   });
 
-  if (team) {
-    return teamWithPokemonsMapper(team);
-  }
+  return teamWithPokemonsMapper(team);
+}
 
-  return null;
+async function findTeamByName(
+  name: string
+): Promise<TeamWithPokemonIds | null> {
+  const team = await prisma.team.findUnique({
+    where: {
+      name: name,
+    },
+    include: {
+      pokemons: true,
+    },
+  });
+
+  return team ? teamWithPokemonsMapper(team) : null;
 }
 
 async function findAll(): Promise<TeamWithPokemonIds[]> {
@@ -101,4 +109,11 @@ const assignPokemonsToTeam = async (
   return findTeamById(id);
 };
 
-export { createTeam, findTeamById, findAll, assignPokemonsToTeam };
+export {
+  CreateTeamInput,
+  createTeam,
+  findTeamById,
+  findTeamByName,
+  findAll,
+  assignPokemonsToTeam,
+};
