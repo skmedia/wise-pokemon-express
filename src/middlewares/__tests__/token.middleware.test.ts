@@ -8,7 +8,6 @@ const { res, next } = getMockRes<Response>({});
 describe("token middleware", () => {
   beforeEach(() => {
     jest.resetModules();
-    process.env = { TOKEN: "test_token" };
   });
 
   test("return access denied when token is not defined", () => {

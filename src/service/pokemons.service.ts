@@ -36,7 +36,7 @@ async function findPokemonById(id: number) {
     },
   });
 
-  if (pokemon === null) {
+  if (!pokemon) {
     return null;
   }
 
