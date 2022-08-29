@@ -1,10 +1,6 @@
-import * as fs from "fs";
 import * as request from "request";
-import { Pokemon, PrismaClient } from "@prisma/client";
-import { exit } from "process";
 import createOrUpdatePokemon from "./src/service/pokemons-import.service";
 
-const prisma = new PrismaClient();
 const args = process.argv.slice(2);
 
 if (args.length !== 1) {

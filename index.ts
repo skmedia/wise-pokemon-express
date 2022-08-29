@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from "express";
+import express, { Express } from "express";
 import dotenv from "dotenv";
 import https from "https";
 import * as fs from "fs";
@@ -13,8 +13,8 @@ const port = process.env.PORT;
 app.use(express.json());
 app.use("/", [teamsRoutes.default, pokemonsRoutes.default]);
 
-var privateKey = fs.readFileSync("./keys/localhost+2-key.pem");
-var certificate = fs.readFileSync("./keys/localhost+2.pem");
+const privateKey = fs.readFileSync("./keys/localhost+2-key.pem");
+const certificate = fs.readFileSync("./keys/localhost+2.pem");
 
 https
   .createServer(

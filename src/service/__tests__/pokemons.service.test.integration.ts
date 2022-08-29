@@ -1,9 +1,4 @@
-import {
-  findPokemonById,
-  findAll,
-  findAllv2,
-  search,
-} from "../pokemons.service";
+import { findPokemonById } from "../pokemons.service";
 import prisma from "../../prisma.client";
 
 beforeAll(async () => {

@@ -1,14 +1,12 @@
 import * as fs from "fs";
-import { PrismaClient } from "@prisma/client";
 import createOrUpdatePokemon from "./src/service/pokemons-import.service";
+import { PokemonFromApi } from "./src/types/pokemon-from-api";
 
-const prisma = new PrismaClient();
+const jsonData = fs.readFileSync("./data/pokemons.json");
+const pokemonsFromFile = JSON.parse(String(jsonData));
 
-let jsonData = fs.readFileSync("./data/pokemons.json");
-let pokemonsFromFile = JSON.parse(String(jsonData));
-
-let pokemons = [];
-pokemonsFromFile.forEach((pokemonFromFile: any) => {
+const pokemons = [];
+pokemonsFromFile.forEach((pokemonFromFile: PokemonFromApi) => {
   pokemons.push(createOrUpdatePokemon(pokemonFromFile));
 });
 
